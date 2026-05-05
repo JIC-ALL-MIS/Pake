@@ -11,7 +11,7 @@ on:
       name:
         description: 'App name'
         required: true
-        default: 'BMS Attendance'
+        default: 'BMS_Attendance'
         type: string
       width:
         description: 'Window width'
