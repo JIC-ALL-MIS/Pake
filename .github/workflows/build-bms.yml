@@ -1,0 +1,53 @@
+name: Build BMS Desktop App
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Website URL to package'
+        required: true
+        default: 'https://bms.jakasystem.com'
+        type: string
+      name:
+        description: 'App name'
+        required: true
+        default: 'BMS Attendance'
+        type: string
+      width:
+        description: 'Window width'
+        required: false
+        default: '1280'
+        type: string
+      height:
+        description: 'Window height'
+        required: false
+        default: '900'
+        type: string
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install Pake CLI
+        run: npm install -g pake-cli
+      
+      - name: Build Windows executable
+        run: |
+          pake ${{ github.event.inputs.url }} `
+            --name "${{ github.event.inputs.name }}" `
+            --width ${{ github.event.inputs.width }} `
+            --height ${{ github.event.inputs.height }}
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BMS-Attendance-Windows
+          path: ./${{ github.event.inputs.name }}.exe
